@@ -527,7 +527,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 814270528}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.82, y: -2.59, z: 0}
+  m_LocalPosition: {x: -7.82, y: -2.631, z: 0}
   m_LocalScale: {x: 0.524121, y: 0.5241208, z: 0}
   m_Children:
   - {fileID: 1264385082}
@@ -566,7 +566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponMesh: {fileID: 701308578}
-  arrowPrefab: {fileID: 1493150389322430, guid: 24d1aec27060f6646a80cfc6b541f0cb,
+  arrowPrefab: {fileID: 114820137516753290, guid: 24d1aec27060f6646a80cfc6b541f0cb,
     type: 2}
   arrowHolder: {fileID: 682332697}
 --- !u!95 &814270532

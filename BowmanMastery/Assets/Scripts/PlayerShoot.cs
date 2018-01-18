@@ -8,14 +8,13 @@ public class PlayerShoot : MonoBehaviour {
 
     public GameObject weaponMesh;
 
-    public GameObject arrowPrefab;
+    public Arrow arrowPrefab;
     public Transform arrowHolder;
     
     private Animator animator;
 
-    private GameObject flecheEquipee;
-    
-    DateTime startTime;
+    private Arrow arrowEquipee;
+
     private bool hasStartedShooting;
 
 	// Use this for initialization
@@ -32,6 +31,7 @@ public class PlayerShoot : MonoBehaviour {
         }
         else
         {
+            // Si on vient de commencer le tir, on lance l'animation de tir
             if (!hasStartedShooting)
             {
                 this.animator.Play("Shoot");
@@ -39,9 +39,10 @@ public class PlayerShoot : MonoBehaviour {
             }
         }
 
-        // Relache le btn tir -> tirer
+        // Relacher le btn tir -> tirer
         if (Input.GetButtonUp("Fire1"))
         {
+            // On tire la flèche et stop l'animation de tir
             Tirer();
             this.animator.Play("Idle");
             hasStartedShooting = false;
@@ -54,7 +55,7 @@ public class PlayerShoot : MonoBehaviour {
     /// </summary>
     private void EquiperFleche()
     {
-        this.flecheEquipee = Instantiate(arrowPrefab, new Vector3(arrowHolder.position.x + .5f, arrowHolder.position.y + .2f, arrowHolder.position.z), arrowHolder.rotation, arrowHolder);
+        this.arrowEquipee = Instantiate<Arrow>(arrowPrefab, new Vector3(arrowHolder.position.x + .5f, arrowHolder.position.y + .2f, arrowHolder.position.z), arrowHolder.rotation, arrowHolder);
     }
 
     /// <summary>
@@ -63,6 +64,14 @@ public class PlayerShoot : MonoBehaviour {
     private void Tirer()
     {
         // TODO: Shoot that damn arrow!
+        if (this.arrowEquipee)
+        {
+            arrowEquipee.transform.SetParent(null);
+            arrowEquipee.Shot = true;
+        } else
+        {
+            throw new Exception("Aucune flèche à tirer.");
+        }
     }
 
     /// <summary>
