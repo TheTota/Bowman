@@ -7,12 +7,16 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour {
 
     public GameObject weaponMesh;
+
+    public GameObject arrowPrefab;
+    public Transform arrowHolder;
     
     private Animator animator;
 
 	// Use this for initialization
 	void Start () {
         this.animator = GetComponent<Animator>();
+        this.EquiperFleche();
     }
 	
 	// Update is called once per frame
@@ -39,6 +43,11 @@ public class PlayerShoot : MonoBehaviour {
         // TODO EVENTUALLY: Calculer le swipe pour bander progressivement l'arc
 
         return 1f;
+    }
+
+    private void EquiperFleche()
+    {
+        Instantiate(arrowPrefab, new Vector3(arrowHolder.position.x + .6f, arrowHolder.position.y + .225f, arrowHolder.position.z), arrowHolder.rotation, arrowHolder);
     }
 
     private void Tirer()
