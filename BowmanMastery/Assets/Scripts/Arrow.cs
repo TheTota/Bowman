@@ -1,34 +1,57 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Arrow : MonoBehaviour {
 
-    private bool shot;
+    private bool readyToBeShot;
 
-    public bool Shot
+    public bool ReadyToBeShot
     {
-        get { return shot; }
-        set { shot = value; }
+        get { return readyToBeShot; }
+        set { readyToBeShot = value; }
     }
 
+    private Rigidbody2D rb;
+    private bool shot;
 
     private void Start()
     {
-        shot = false;
+        readyToBeShot = false;
+        this.rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
-        if (shot)
+        if (readyToBeShot && !shot)
         {
-            Debug.Log("Arrow's flying !!");
+            ShootArrow();
         }
+    }
+
+    private void ShootArrow()
+    {
+        this.shot = true;
+
+        // Indépendance de l'arrow
+        this.transform.SetParent(null);
+
+        // Tir
+        this.rb.bodyType = RigidbodyType2D.Dynamic;
+        this.rb.AddForce(this.transform.up * 13f, ForceMode2D.Impulse); 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collision avec " + collision.GetComponent<Collider>().tag);
+        this.rb.velocity = Vector3.zero;
+        this.rb.bodyType = RigidbodyType2D.Kinematic;
+
+        if (collision.tag == "Target")
+        {
+            collision.gameObject.GetComponent<SpriteRenderer>().color = new Color(.3f, .7f, 0f);
+        }
     }
 
 }

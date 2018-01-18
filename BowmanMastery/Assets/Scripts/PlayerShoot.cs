@@ -63,11 +63,9 @@ public class PlayerShoot : MonoBehaviour {
     /// </summary>
     private void Tirer()
     {
-        // TODO: Shoot that damn arrow!
         if (this.arrowEquipee)
         {
-            arrowEquipee.transform.SetParent(null);
-            arrowEquipee.Shot = true;
+            arrowEquipee.ReadyToBeShot = true;
         } else
         {
             throw new Exception("Aucune flèche à tirer.");
