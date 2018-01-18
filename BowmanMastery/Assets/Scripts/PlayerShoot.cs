@@ -13,6 +13,11 @@ public class PlayerShoot : MonoBehaviour {
     
     private Animator animator;
 
+    private GameObject flecheEquipee;
+    
+    DateTime startTime;
+    private bool hasStartedShooting;
+
 	// Use this for initialization
 	void Start () {
         this.animator = GetComponent<Animator>();
@@ -27,34 +32,37 @@ public class PlayerShoot : MonoBehaviour {
         }
         else
         {
-            animator.SetFloat("Force", Mathf.Clamp01(BanderArc()));
+            if (!hasStartedShooting)
+            {
+                this.animator.Play("Shoot");
+                hasStartedShooting = true;
+            }
         }
 
         // Relache le btn tir -> tirer
         if (Input.GetButtonUp("Fire1"))
         {
             Tirer();
-            animator.SetFloat("Force", 0f);
+            this.animator.Play("Idle");
+            hasStartedShooting = false;
         }
     }
 
-    private float BanderArc()
-    {
-        // TODO EVENTUALLY: Calculer le swipe pour bander progressivement l'arc
-
-        return 1f;
-    }
-
+    /// <summary>
+    /// Equipe une flèche en l'instanciant.
+    /// Sauvegarde une référence à la flèche dans la variable flecheEquipee.
+    /// </summary>
     private void EquiperFleche()
     {
-        Instantiate(arrowPrefab, new Vector3(arrowHolder.position.x + .6f, arrowHolder.position.y + .225f, arrowHolder.position.z), arrowHolder.rotation, arrowHolder);
+        this.flecheEquipee = Instantiate(arrowPrefab, new Vector3(arrowHolder.position.x + .5f, arrowHolder.position.y + .2f, arrowHolder.position.z), arrowHolder.rotation, arrowHolder);
     }
 
+    /// <summary>
+    /// Tir de la flèche équipée.
+    /// </summary>
     private void Tirer()
     {
-        // TODO: Shoot the arrow!
-
-        Debug.Log("Shooting!");
+        // TODO: Shoot that damn arrow!
     }
 
     /// <summary>
