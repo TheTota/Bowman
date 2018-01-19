@@ -4,27 +4,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class PlayerShoot : MonoBehaviour {
+public class PlayerShoot : MonoBehaviour
+{
 
     public GameObject weaponMesh;
 
     public Arrow arrowPrefab;
     public Transform arrowHolder;
-    
+
     private Animator animator;
 
     private Arrow arrowEquipee;
 
     private bool hasStartedShooting;
+    private bool hasUneArrowEquipee;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         this.animator = GetComponent<Animator>();
         this.EquiperFleche();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         if (!Input.GetButtonDown("Fire1"))
         {
             OrientationArme();
@@ -32,7 +36,7 @@ public class PlayerShoot : MonoBehaviour {
         else
         {
             // Si on vient de commencer le tir, on lance l'animation de tir
-            if (!hasStartedShooting)
+            if (!hasStartedShooting && hasUneArrowEquipee)
             {
                 this.animator.Play("Shoot");
                 hasStartedShooting = true;
@@ -42,10 +46,13 @@ public class PlayerShoot : MonoBehaviour {
         // Relacher le btn tir -> tirer
         if (Input.GetButtonUp("Fire1"))
         {
-            // On tire la flèche et stop l'animation de tir
-            Tirer();
-            this.animator.Play("Idle");
-            hasStartedShooting = false;
+            if (hasStartedShooting)
+            {
+                // On tire la flèche et stop l'animation de tir
+                Tirer();
+                this.animator.Play("Idle");
+                hasStartedShooting = false;
+            }
         }
     }
 
@@ -55,7 +62,8 @@ public class PlayerShoot : MonoBehaviour {
     /// </summary>
     private void EquiperFleche()
     {
-        this.arrowEquipee = Instantiate<Arrow>(arrowPrefab, new Vector3(arrowHolder.position.x + .5f, arrowHolder.position.y + .2f, arrowHolder.position.z), arrowHolder.rotation, arrowHolder);
+        this.arrowEquipee = Instantiate<Arrow>(arrowPrefab, arrowHolder.position, arrowHolder.rotation, arrowHolder);
+        this.hasUneArrowEquipee = true;
     }
 
     /// <summary>
@@ -65,11 +73,24 @@ public class PlayerShoot : MonoBehaviour {
     {
         if (this.arrowEquipee)
         {
-            arrowEquipee.ReadyToBeShot = true;
-        } else
+            this.arrowEquipee.ReadyToBeShot = true;
+            this.hasUneArrowEquipee = false;
+            StartCoroutine(PreparerEquiperFleche());
+        }
+        else
         {
             throw new Exception("Aucune flèche à tirer.");
         }
+    }
+
+    /// <summary>
+    /// Equipe la flèche aprèx X secondes.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator PreparerEquiperFleche()
+    {
+        yield return new WaitForSeconds(1f);
+        this.EquiperFleche();
     }
 
     /// <summary>

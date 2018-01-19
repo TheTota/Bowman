@@ -45,13 +45,13 @@ public class Arrow : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        this.rb.velocity = Vector3.zero;
+        this.rb.velocity = Vector2.zero;
+        this.rb.angularVelocity = 0f;
         this.rb.bodyType = RigidbodyType2D.Kinematic;
 
         if (collision.tag == "Target")
         {
             collision.gameObject.GetComponent<SpriteRenderer>().color = new Color(.3f, .7f, 0f);
         }
-    }
-
+    }    
 }
