@@ -5,8 +5,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Arrow : MonoBehaviour {
-
-    private bool readyToBeShot;
+    private bool readyToBeShot;   
 
     public bool ReadyToBeShot
     {
@@ -14,12 +13,23 @@ public class Arrow : MonoBehaviour {
         set { readyToBeShot = value; }
     }
 
+    private float shotForce;
+
+    public float ShotForce
+    {
+        get { return shotForce; }
+        set { shotForce = value; }
+    }
+
+
     private Rigidbody2D rb;
     private bool shot;
+    private bool hasHit;
 
     private void Start()
     {
-        readyToBeShot = false;
+        this.readyToBeShot = false;
+        this.hasHit = false;
         this.rb = GetComponent<Rigidbody2D>();
     }
 
@@ -28,6 +38,13 @@ public class Arrow : MonoBehaviour {
         if (readyToBeShot && !shot)
         {
             ShootArrow();
+        }
+
+        if (shot && !hasHit)
+        {
+            Vector2 v = this.rb.velocity;
+            float angle = Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
         }
     }
 
@@ -40,11 +57,12 @@ public class Arrow : MonoBehaviour {
 
         // Tir
         this.rb.bodyType = RigidbodyType2D.Dynamic;
-        this.rb.AddForce(this.transform.up * 13f, ForceMode2D.Impulse); 
+        this.rb.AddForce(this.transform.up * shotForce, ForceMode2D.Impulse); 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        this.hasHit = true;
         this.rb.velocity = Vector2.zero;
         this.rb.angularVelocity = 0f;
         this.rb.bodyType = RigidbodyType2D.Kinematic;

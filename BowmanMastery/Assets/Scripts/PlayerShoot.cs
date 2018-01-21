@@ -74,6 +74,7 @@ public class PlayerShoot : MonoBehaviour
         if (this.arrowEquipee)
         {
             this.arrowEquipee.ReadyToBeShot = true;
+            this.arrowEquipee.ShotForce = 17f;
             this.hasUneArrowEquipee = false;
             StartCoroutine(PreparerEquiperFleche());
         }
