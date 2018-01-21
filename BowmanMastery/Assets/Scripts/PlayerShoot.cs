@@ -19,6 +19,8 @@ public class PlayerShoot : MonoBehaviour
     private bool hasStartedShooting;
     private bool hasUneArrowEquipee;
 
+    private int shotForce;
+
     // Use this for initialization
     void Start()
     {
@@ -29,17 +31,21 @@ public class PlayerShoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!Input.GetButtonDown("Fire1"))
-        {
-            OrientationArme();
-        }
-        else
+        OrientationArme();
+
+        if (Input.GetButton("Fire1"))
         {
             // Si on vient de commencer le tir, on lance l'animation de tir
             if (!hasStartedShooting && hasUneArrowEquipee)
             {
+                this.shotForce = 0;
                 this.animator.Play("Shoot");
                 hasStartedShooting = true;
+            }
+
+            if (hasStartedShooting)
+            {
+                this.shotForce++;
             }
         }
 
@@ -74,7 +80,7 @@ public class PlayerShoot : MonoBehaviour
         if (this.arrowEquipee)
         {
             this.arrowEquipee.ReadyToBeShot = true;
-            this.arrowEquipee.ShotForce = 17f;
+            this.arrowEquipee.ShotForce = Mathf.Clamp(this.shotForce / 2f, 1f, 20f);
             this.hasUneArrowEquipee = false;
             StartCoroutine(PreparerEquiperFleche());
         }
